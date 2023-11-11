@@ -9,8 +9,6 @@ import time
 import unittest
 from utils import twitter_login, generate_random_tweet
 
-unittest.TestLoader.sortTestMethodsUsing = None
-
 class TwitterTest(unittest.TestCase):
     
 
