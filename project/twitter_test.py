@@ -12,32 +12,40 @@ from utils import twitter_login, generate_random_tweet
 class TwitterTest(unittest.TestCase):
     
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(inst):
         # Init driver
         o = webdriver.ChromeOptions()
         o.add_experimental_option("detach", True)
         s = webdriver.ChromeService(DRIVER_PATH)
-        self.driver = webdriver.Chrome(service=s, options=o)
-        self.driver.maximize_window()
+        inst.driver = webdriver.Chrome(service=s, options=o)
+        inst.driver.maximize_window()
     
 
-    def tearDown(self):
-        self.driver.quit()
+    @classmethod
+    def tearDownClass(inst):
+        inst.driver.quit()
         
-    def test_login_incorrect_password(self):
+    def test_1_login_incorrect_password(self):
+        print("TEST 1: LOGIN INCORRECT PASSWORD")
+        
+        # login with incorrect password
         twitter_login(self.driver, TWITTER_USERNAME, "INCORRECT PASSWORD")
         
         # check if still at login page
         self.assertEqual(self.driver.current_url, "https://twitter.com/i/flow/login")
     
-    def test_login_success(self):
+    def test_2_login_success(self):
+        print("TEST 2: LOGIN SUCCESS")
+        
+        # login with correct password
         twitter_login(self.driver, TWITTER_USERNAME, TWITTER_PASSWORD)
         
         # check if redirected to home page
         self.assertEqual(self.driver.current_url, "https://twitter.com/home")
   
-    def test_create_tweet(self):
-        twitter_login(self.driver, TWITTER_USERNAME, TWITTER_PASSWORD)
+    def test_3_create_tweet(self):
+        print("TEST 3: CREATE NEW TWEET")
         
         # generate random tweet
         TWEET_CONTENT = generate_random_tweet()
@@ -53,10 +61,9 @@ class TwitterTest(unittest.TestCase):
         
         # go to profile page
         self.driver.get("https://twitter.com/" + TWITTER_USERNAME)
-        time.sleep(10)
         
         # get the latest tweet
-        latest_tweet = self.driver.find_element(By.XPATH, "//article[@data-testid='tweet']//div[@data-testid='tweetText']")
+        latest_tweet = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//article[@data-testid='tweet']//div[@data-testid='tweetText']")))
         ActionChains(self.driver).move_to_element(latest_tweet).perform()
         time.sleep(10)
 

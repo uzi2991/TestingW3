@@ -12,7 +12,7 @@ def twitter_login(driver, username, password):
         driver.get("https://twitter.com/i/flow/login")
 
         # username input
-        username_input = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[autocomplete="username"]')))
+        username_input = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[autocomplete="username"]')))
         username_input.clear()
         username_input.send_keys(username)
         username_input.send_keys(Keys.RETURN)
