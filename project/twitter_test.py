@@ -69,6 +69,24 @@ class TwitterTest(unittest.TestCase):
 
         # check the content of the latest tweet
         self.assertEqual(latest_tweet.get_attribute("textContent"), TWEET_CONTENT)
+        
+    def test_4_search(self):
+        print("TEST 4: SEARCH")
+        
+        # twitter_login(self.driver, TWITTER_USERNAME, TWITTER_PASSWORD)
+        
+        
+        # search box
+        search_input = self.driver.find_element(By.XPATH, "//input[@data-testid='SearchBox_Search_Input']")
+        search_input.send_keys("cats")
+        search_input.send_keys(Keys.RETURN)
+        
+        # Wait until the search process complete
+        time.sleep(10)
+        
+        # check the url
+        self.assertEqual(self.driver.current_url, "https://twitter.com/search?q=cats&src=typed_query")
+        
      
         
     
